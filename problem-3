@@ -1,0 +1,141 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Sep 15 09:25:56 2014
+
+@author: rm
+"""
+import itertools 
+
+b = [3, 4, 6, 5, 8, 7, 1, 2]
+
+
+def findBreakpoints(l):
+    '''
+    input: the list
+    output: #breakpoints
+    '''
+    
+    newlist = [0]
+    for i in l:
+        newlist.append(i)
+    newlist.append(len(l)+1)
+#    print newlist
+    count= 0
+    indexList = []
+
+    increasingStripPresent = False
+    for i in newlist[:-1]:
+
+        if newlist[count+1] != i+1 and newlist[count+1] != i-1:
+            
+            indexList.append(count)
+
+
+        else:
+
+            if newlist[count+1]  == i+1:
+                increasingStripPresent = True
+        count += 1
+        
+    count = 0
+    decreasingStripIndex = []
+    for i in newlist[:-1]:
+        
+        if newlist[count+1] == i-1 and newlist[count-1] != i-1: #beginning of a decreasing strip
+        
+            decreasingStripIndex.append(count-1)
+            
+        if newlist[count+1] != i-1 and newlist[count-1] == i+1:
+            decreasingStripIndex.append(count-1)
+            break
+        count += 1
+    try:
+        return len(indexList), increasingStripPresent, [decreasingStripIndex[0], decreasingStripIndex[-1]]
+    except:
+        return len(indexList), increasingStripPresent, decreasingStripIndex
+
+            
+
+def reverseSubset(wholeList, reverseSubset):
+    '''
+    reverseSubset is a list, 2 elements long
+    returns list with reversed segment specified in index list
+    '''
+    
+    newlist = []
+    newlist.extend(reversed(wholeList[reverseSubset[0]:reverseSubset[1]+1]))
+    outputlist = []
+    r = range(reverseSubset[0], reverseSubset[1]+1)
+    count = 0
+    newlistcount = 0
+    for i in wholeList:
+        if count in r:
+            outputlist.append(newlist[newlistcount])
+            newlistcount += 1
+        else:
+            outputlist.append(i)
+        
+        count += 1
+    return outputlist
+#
+def findOptimalReversalSubmet(wholeList, originalNumberOfBreaks):
+    '''
+    input, list to find optimal reversal
+    returns list with reversed segment specified in index list
+    '''
+
+    r  = itertools.combinations(range(0, len(wholeList)), 2)
+
+    resultslist = []
+    for i in r:
+
+        q = reverseSubset(wholeList, [i[0], i[1]])
+
+        numberOfBreaks, increasingStripPresent, reverseStrip = findBreakpoints(q)
+#        print numberOfBreaks
+        resultslist.append((originalNumberOfBreaks - numberOfBreaks))
+
+        if (originalNumberOfBreaks - numberOfBreaks) == 2:
+            return q, numberOfBreaks
+    r  = itertools.combinations(range(0, len(wholeList)), 2)
+    resultslist = []
+    for i in r:
+
+        q = reverseSubset(wholeList, [i[0], i[1]])
+
+        numberOfBreaks, increasingStripPresent, reverseStrip = findBreakpoints(q)
+
+        resultslist.append((originalNumberOfBreaks - numberOfBreaks))
+
+        if (originalNumberOfBreaks - numberOfBreaks) == 1:
+            return q, numberOfBreaks
+
+numberOfBreaks, increasingStripPresent, reverseStrip = findBreakpoints(b)
+#print numberOfBreaks
+while numberOfBreaks > 0:
+    print b
+    if increasingStripPresent:
+        b, numberOfBreaks = findOptimalReversalSubmet(b, numberOfBreaks)
+        numberOfBreaks, increasingStripPresent, reverseStrip = findBreakpoints(b)
+        
+    else:
+        b = reverseSubset(b, reverseStrip)
+print b
+        
+## ################################### ################################### ################################ mayb#e not optimal since ifax num of BPs not 2 at a iven step,have to chg ose one wih only on oBP removal; this ay not be ,est one
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
