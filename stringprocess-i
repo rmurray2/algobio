@@ -38,6 +38,8 @@ for i in textsplit:
 
 
 sortedq = sorted(textdict.items(), key=operator.itemgetter(1))
+# sort dict idea from
+# https://stackoverflow.com/questions/613183/sort-a-python-dictionary-by-value/613218#613218
 count = 10
 for j in sortedq[-10:]:
     print str(count)+'. "'+j[0]+'":'+' '+str(j[1])
