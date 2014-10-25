@@ -1,0 +1,61 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sat Oct 25 14:25:34 2014
+
+@author: rm
+"""
+
+import re
+import operator
+
+
+nonalphare = re.compile('[^a-zA-Z \n]')
+dashre = re.compile('-')
+
+textwhole = open('/home/rm/Downloads/english.50MB', 'r').read()
+
+textwhole = nonalphare.sub('', textwhole) #get rid of all non alphabetic characters, replace with nothing
+textwhole = dashre.sub(' ', textwhole) #replace dashes with spaces
+
+textsplit = textwhole.split('\n') #1,007,649 lines
+
+textdict = {}
+
+count = 0
+for i in textsplit:
+    if i == '':
+        continue
+    i= i.split(' ') #split into component wordss
+
+    for j in i:
+        if j == '':
+            continue
+        j = j.lower() #always consider lowercase of all words
+        if j not in textdict:
+            textdict[j] = 0
+        else:
+            textdict[j]  += 1
+
+
+sortedq = sorted(textdict.items(), key=operator.itemgetter(1))
+count = 10
+for j in sortedq[-10:]:
+    print str(count)+'. "'+j[0]+'":'+' '+str(j[1])
+    count -=1
+
+"""
+
+This outputs:
+
+10. "his": 98035
+9. "that": 100523
+8. "i": 105445
+7. "he": 123366
+6. "in": 146876
+5. "a": 171301
+4. "to": 252613
+3. "of": 305260
+2. "and": 403485
+1. "the": 612207
+
+"""
